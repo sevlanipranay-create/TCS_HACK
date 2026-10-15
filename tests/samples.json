@@ -1,0 +1,57 @@
+[
+  {
+    "id": "t1_canteen",
+    "title": "Smart Campus Canteen Queue & Pre-Ordering",
+    "problem_statement": "During peak lunch hours (12:30 PM - 1:45 PM), college students and faculty face 30-40 minute wait times at the campus canteen. Food runs out unpredictably, kitchen prep is chaotic, and long physical queues cause students to skip meals or arrive late to lectures. We need a lightweight web solution to display live counter traffic, allow pre-ordering with pickup tokens, and help kitchen staff manage preparation batches without expensive turnstiles or kiosk hardware.",
+    "team": {
+      "team_size": 4,
+      "skills": ["React", "FastAPI", "SQLite", "TailwindCSS"],
+      "minutes_available": 75,
+      "preferred_stack": "React + FastAPI"
+    }
+  },
+  {
+    "id": "t2_study",
+    "title": "Peer Study Group & Skill Exchange Matching",
+    "problem_statement": "Undergraduate engineering students struggle to find compatible study peers for challenging subjects like Applied Mathematics and Data Structures. WhatsApp groups become noisy and unorganized. Students need a focused platform to form small accountability circles, schedule verified study sprints based on module schedules, and exchange peer review notes.",
+    "team": {
+      "team_size": 3,
+      "skills": ["Python", "FastAPI", "HTML/CSS"],
+      "minutes_available": 60,
+      "preferred_stack": "FastAPI + Jinja"
+    }
+  },
+  {
+    "id": "t3_vague_pii",
+    "title": "Campus Lost and Found with Contact Details",
+    "problem_statement": "Students frequently lose essential items like ID badges, lab notebooks, and scientific calculators across campus auditoriums. If someone finds an item, they should contact the owner directly. Please reach out to student coordinator John Doe at john.doe@vesit.edu or phone +91-9876543210 immediately. Also CC campus-security@vesit.ac.in. We want an AI-assisted lost and found portal.",
+    "team": {
+      "team_size": 4,
+      "skills": ["JavaScript", "Python"],
+      "minutes_available": 75,
+      "preferred_stack": ""
+    }
+  },
+  {
+    "id": "t4_overscoped",
+    "title": "Campus Metaverse Super-App",
+    "problem_statement": "Build an end-to-end multi-tenant campus super-app integrating 3D virtual campus exploration, automated blockchain-based degree certification, real-time AI computer vision attendance with CCTV drones, biometric cafeteria payments, cross-campus ride sharing, automated timetable rescheduling with genetic algorithms, library inventory tracking using RFID simulation, and a neural network mental health counselor with VR therapy.",
+    "team": {
+      "team_size": 2,
+      "skills": ["Python", "HTML"],
+      "minutes_available": 30,
+      "preferred_stack": "Fullstack"
+    }
+  },
+  {
+    "id": "t5_generic",
+    "title": "Generic Deadline Tracker",
+    "problem_statement": "We want to build a simple digital web application that helps students keep track of daily assignment deadlines and campus events.",
+    "team": {
+      "team_size": 4,
+      "skills": ["Python", "React"],
+      "minutes_available": 75,
+      "preferred_stack": ""
+    }
+  }
+]
