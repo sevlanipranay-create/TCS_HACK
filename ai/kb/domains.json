@@ -1,0 +1,624 @@
+{
+  "domains": [
+    {
+      "id": "food_waste",
+      "label": "Food Waste Reduction",
+      "keywords": ["canteen", "cafeteria", "surplus", "compost", "leftover", "expiry", "portion", "spoilage"],
+      "who_is_affected": [
+        "Campus students and staff dining on campus",
+        "Canteen managers dealing with unsold prepared food",
+        "Local food donation partners and charities"
+      ],
+      "why_it_matters": "Excess cafeteria food gets thrown away daily while nearby communities experience food insecurity.",
+      "stakeholders": [
+        {
+          "name": "Canteen Operations Lead",
+          "interest": "Minimize cost and disposal overhead",
+          "influence": "high"
+        },
+        {
+          "name": "Student Body Representative",
+          "interest": "Fair pricing and quality fresh meals",
+          "influence": "medium"
+        },
+        {
+          "name": "Food Bank Coordinator",
+          "interest": "Reliable safe surplus pickups",
+          "influence": "medium"
+        }
+      ],
+      "personas": [
+        {
+          "name": "Chef Ramesh",
+          "role": "Head Cook and Kitchen Manager",
+          "goal": "Accurately forecast daily meal quantities and redirect clean leftovers before closing",
+          "pain_point": "No quick way to log leftover portions or alert recovery volunteers before food goes bad",
+          "how_to_validate": "Ask 2 canteen supervisors how they estimate extra food at end-of-day"
+        },
+        {
+          "name": "Ananya",
+          "role": "Volunteer Food Rescue Lead",
+          "goal": "Receive verified alerts for edible surplus with clear pickup windows",
+          "pain_point": "Last-minute disorganized phone calls resulting in spoiled food or missed handoffs",
+          "how_to_validate": "Show a 30-second notification mockup to a campus volunteer club member"
+        }
+      ],
+      "features": [
+        {
+          "name": "Surplus Logging",
+          "why": "Lets kitchen staff record unsold meal items in under 20 seconds",
+          "effort": "S",
+          "impact": 5,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Claim and Pickup Dispatch",
+          "why": "Sends immediate reservation notifications to registered community volunteers",
+          "effort": "M",
+          "impact": 4,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Portion Demand Forecaster",
+          "why": "Estimates prep volumes based on historical day-of-week attendance patterns",
+          "effort": "M",
+          "impact": 4,
+          "priority": "should",
+          "innovative": true
+        },
+        {
+          "name": "Expiry and Freshness Tracker",
+          "why": "Tracks safe holding temperature hours to prevent food safety violations",
+          "effort": "S",
+          "impact": 3,
+          "priority": "should",
+          "innovative": false
+        },
+        {
+          "name": "Compost Volume Analytics",
+          "why": "Reports monthly diversion metrics for sustainability auditing",
+          "effort": "L",
+          "impact": 2,
+          "priority": "could",
+          "innovative": false
+        }
+      ],
+      "key_questions": [
+        "How is leftover food weighed or counted at the end of each shift?",
+        "What local hygiene and safety guidelines govern cooked food distribution?",
+        "Who coordinates transportation between the cafeteria and collection hubs?",
+        "How do volunteers verify that items are still safe to consume?"
+      ],
+      "approach_options": [
+        {
+          "name": "Direct Matching Board",
+          "how_it_works": "Kitchen posts available trays and nearby verified partners claim them on a first-come queue.",
+          "tradeoff": "Very fast to implement, but requires active manual monitoring by volunteers."
+        },
+        {
+          "name": "Scheduled Batch Redistribution",
+          "how_it_works": "Batches pickups into two daily scheduled windows with pre-allocated charity routes.",
+          "tradeoff": "More predictable logistics, but less flexible for unexpected midday surplus."
+        },
+        {
+          "name": "Smart Discount Flash-Claim",
+          "how_it_works": "Offers subsidized takeaway boxes to students 30 minutes before kitchen close.",
+          "tradeoff": "Recovers kitchen costs immediately, but reduces food available for charitable donation."
+        }
+      ],
+      "success_criteria": [
+        "Reduces daily discarded cooked portions by at least 30 percent in weekly logs",
+        "Logs surplus and confirms pickup partner within 15 minutes of kitchen shift end",
+        "Maintains zero reported food safety incidents through transparent temperature logging"
+      ],
+      "out_of_scope": [
+        "Refrigerated inter-city transportation logistics and long-haul delivery fleets",
+        "Automated kitchen hardware sensors and IoT bin scales"
+      ],
+      "innovation_prompts": [
+        "What if students could subscribe to surplus notifications for discounted end-of-day dinner bowls?",
+        "What if the kitchen used attendance check-ins from campus gates to predict lunchtime meal trays?",
+        "What if uncollected leftovers were automatically routed to an on-campus rapid composter?"
+      ],
+      "example_input": "Log 15 unused lunch meal trays from campus cafeteria"
+    },
+    {
+      "id": "education",
+      "label": "Collaborative Learning",
+      "keywords": ["student", "study", "learning", "classroom", "exam", "course", "tutor", "homework"],
+      "who_is_affected": [
+        "Undergraduate engineering students",
+        "Peer tutors and teaching assistants",
+        "Course instructors tracking concept mastery"
+      ],
+      "why_it_matters": "Students often struggle in isolation with difficult coursework because finding compatible study groups is disorganized.",
+      "stakeholders": [
+        {
+          "name": "Academic Dean",
+          "interest": "Improve retention and exam success rates",
+          "influence": "high"
+        },
+        {
+          "name": "Peer Mentor Lead",
+          "interest": "Efficiently answer recurring student questions",
+          "influence": "medium"
+        },
+        {
+          "name": "Course Representative",
+          "interest": "Foster inclusive collaborative study circles",
+          "influence": "medium"
+        }
+      ],
+      "personas": [
+        {
+          "name": "Priya",
+          "role": "Third-Year Engineering Student",
+          "goal": "Quickly find 2 or 3 classmates working on the same difficult assignment topic",
+          "pain_point": "Scattered WhatsApp group chats make scheduling synchronous practice sessions chaotic",
+          "how_to_validate": "Ask 3 classmates how they form study groups before midterms"
+        },
+        {
+          "name": "Karthik",
+          "role": "Department Peer Tutor",
+          "goal": "Review common doubts in one place rather than answering duplicate messages",
+          "pain_point": "Overwhelmed by repetitive private messages during the week leading up to finals",
+          "how_to_validate": "Show a concept doubt board wireframe to a senior student tutor"
+        }
+      ],
+      "features": [
+        {
+          "name": "Topic Circle Matcher",
+          "why": "Connects students studying identical problem sets into small peer cohorts",
+          "effort": "S",
+          "impact": 5,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Structured Doubt Forum",
+          "why": "Aggregates unresolved questions tagged by module and difficulty",
+          "effort": "M",
+          "impact": 4,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Adaptive Practice Recommender",
+          "why": "Suggests targeted practice problems based on mutual student weak spots",
+          "effort": "M",
+          "impact": 4,
+          "priority": "should",
+          "innovative": true
+        },
+        {
+          "name": "Sprint Study Timer",
+          "why": "Runs synchronized 25-minute study intervals with shared milestone tracking",
+          "effort": "S",
+          "impact": 3,
+          "priority": "should",
+          "innovative": false
+        },
+        {
+          "name": "Tutor Office Hours Scheduler",
+          "why": "Books 10-minute micro-slots with department assistants",
+          "effort": "L",
+          "impact": 2,
+          "priority": "could",
+          "innovative": false
+        }
+      ],
+      "key_questions": [
+        "How do students currently discover peers studying the same module?",
+        "What motivates peers to actively contribute rather than passively lurk?",
+        "How can study groups prevent sharing unauthorized graded problem answers?",
+        "What format best facilitates fast peer problem-solving within 45 minutes?"
+      ],
+      "approach_options": [
+        {
+          "name": "Topic-Centric Micro Circles",
+          "how_it_works": "Creates lightweight 3-person rooms capped at 45 minutes for focused problem solving.",
+          "tradeoff": "High focus and engagement, but requires active coordination by group members."
+        },
+        {
+          "name": "Asynchronous Question Queue",
+          "how_it_works": "Posts specific code bugs or derivations with upvotes and vetted student hints.",
+          "tradeoff": "Easy for introverts to participate, but lacks immediate real-time feedback."
+        },
+        {
+          "name": "Flash Peer Tutoring Sessions",
+          "how_it_works": "Pairs seniors who aced the course with struggling juniors for 15-minute quick tips.",
+          "tradeoff": "Very high learning quality, but limited by senior student availability."
+        }
+      ],
+      "success_criteria": [
+        "Pairs a student with a relevant study buddy in under 2 minutes",
+        "Resolves at least 70 percent of peer-posted assignment doubts within 24 hours",
+        "Achieves 80 percent repeat participation across weekly study sprint cycles"
+      ],
+      "out_of_scope": [
+        "Comprehensive university learning management system or official grade recording",
+        "Proctored examination surveillance and anti-cheating browser locks"
+      ],
+      "innovation_prompts": [
+        "What if study groups were formed dynamically based on code compilation error signatures?",
+        "What if answering a peer doubt earned priority booking for tutor review slots?",
+        "What if students held 10-minute silent co-working sprints with shared checklists?"
+      ],
+      "example_input": "Match 3 students preparing for database normalization exam"
+    },
+    {
+      "id": "healthcare",
+      "label": "Clinic Patient Triage",
+      "keywords": ["clinic", "patient", "triage", "appointment", "prescription", "symptom", "medicine", "doctor"],
+      "who_is_affected": [
+        "Outpatient clinic visitors",
+        "Triage nurses and intake staff",
+        "Attending physicians managing clinic flow"
+      ],
+      "why_it_matters": "Overcrowded waiting rooms and paper check-ins cause delays in prioritizing high-risk patients.",
+      "stakeholders": [
+        {
+          "name": "Medical Superintendent",
+          "interest": "Reduce patient wait times and treatment bottlenecks",
+          "influence": "high"
+        },
+        {
+          "name": "Intake Nurse Lead",
+          "interest": "Quickly record vitals and identify acute cases",
+          "influence": "high"
+        },
+        {
+          "name": "Pharmacy Dispenser",
+          "interest": "Receive legible and verified prescription notes",
+          "influence": "low"
+        }
+      ],
+      "personas": [
+        {
+          "name": "Nurse Sunita",
+          "role": "Emergency Outpatient Triage Nurse",
+          "goal": "Record basic symptoms and vitals in 60 seconds to classify patient urgency",
+          "pain_point": "Manual paper tokens cause patients with worsening symptoms to sit unnoticed in the queue",
+          "how_to_validate": "Check with a clinic nurse on their standard 3-tier triage intake questions"
+        },
+        {
+          "name": "Vikram",
+          "role": "Walk-in Patient Guardian",
+          "goal": "Understand estimated consultation wait times and queue status clearly",
+          "pain_point": "Uncertainty about wait times causing anxiety and crowding at the front desk",
+          "how_to_validate": "Interview two people in an outpatient waiting room about wait communication"
+        }
+      ],
+      "features": [
+        {
+          "name": "Symptom Intake Assessment",
+          "why": "Captures age, primary complaint, and emergency red-flag indicators",
+          "effort": "S",
+          "impact": 5,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Priority Triage Queue",
+          "why": "Orders the consultation list by clinical urgency rather than simple arrival time",
+          "effort": "M",
+          "impact": 5,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Queue Delay Notifier",
+          "why": "Calculates realistic wait estimates and sends updates to waiting room screens",
+          "effort": "S",
+          "impact": 4,
+          "priority": "should",
+          "innovative": true
+        },
+        {
+          "name": "Medication Reconciliation Check",
+          "why": "Screens existing patient prescriptions for major contraindications",
+          "effort": "M",
+          "impact": 3,
+          "priority": "should",
+          "innovative": false
+        },
+        {
+          "name": "Post-Visit Care Instructions",
+          "why": "Generates a simplified home care checklist for the patient",
+          "effort": "L",
+          "impact": 2,
+          "priority": "could",
+          "innovative": false
+        }
+      ],
+      "key_questions": [
+        "What clinical checklist determines immediate escalation to emergency care?",
+        "How are vitals captured without slowing down the intake counter?",
+        "What patient privacy rules apply to waiting room display boards?",
+        "How do nurses override algorithmic queue positions based on visual assessment?"
+      ],
+      "approach_options": [
+        {
+          "name": "Urgency-Weighted Queue",
+          "how_it_works": "Assigns color-coded urgency scores to order the consultation queue dynamically.",
+          "tradeoff": "Prioritizes critical cases immediately, but stable patients may face longer waits."
+        },
+        {
+          "name": "Self-Service Digital Kiosk",
+          "how_it_works": "Patients enter demographic and complaint details on a tablet upon arrival.",
+          "tradeoff": "Reduces receptionist paperwork, but requires assistance for elderly patients."
+        },
+        {
+          "name": "Two-Track Fast Lane",
+          "how_it_works": "Separates minor prescription renewals from complex diagnostic consultations.",
+          "tradeoff": "Rapidly clears quick visits, but demands dedicated staff for both lanes."
+        }
+      ],
+      "success_criteria": [
+        "Classifies patient urgency category within 90 seconds of check-in",
+        "Reduces average wait time for high-urgency patients to under 15 minutes",
+        "Keeps estimated wait time accuracy within a 10-minute margin of error"
+      ],
+      "out_of_scope": [
+        "Full electronic health record system integration and medical billing",
+        "Autonomous diagnostic decisions or direct prescription dispensing"
+      ],
+      "innovation_prompts": [
+        "What if the triage tool used structured questions to detect subtle escalation signs?",
+        "What if waiting room displays showed live anonymized progress without revealing medical reasons?",
+        "What if patients could complete intake questions on their own phone while traveling to the clinic?"
+      ],
+      "example_input": "Register fever and mild asthma patient at outpatient desk"
+    },
+    {
+      "id": "transport",
+      "label": "Campus Transit",
+      "keywords": ["commute", "transit", "shuttle", "bus", "route", "traffic", "parking", "fleet"],
+      "who_is_affected": [
+        "Daily student and faculty commuters",
+        "Campus shuttle and van drivers",
+        "Campus facilities and transit dispatchers"
+      ],
+      "why_it_matters": "Irregular shuttle schedules and uncoordinated transit stops create long lines and missed classes.",
+      "stakeholders": [
+        {
+          "name": "Campus Transport Supervisor",
+          "interest": "Optimize vehicle fuel usage and on-time reliability",
+          "influence": "high"
+        },
+        {
+          "name": "Commuter Union Representative",
+          "interest": "Predictable pickup schedules and safe seating",
+          "influence": "high"
+        },
+        {
+          "name": "Security Gate Staff",
+          "interest": "Prevent bus congestion at campus entry checkpoints",
+          "influence": "low"
+        }
+      ],
+      "personas": [
+        {
+          "name": "Deepak",
+          "role": "Day Scholar Student Commuter",
+          "goal": "Know exactly when the next campus shuttle arrives to avoid missing morning lab sessions",
+          "pain_point": "Shuttles arrive in irregular bunches, causing 30-minute delays without warning",
+          "how_to_validate": "Survey 3 students waiting at the main campus bus shelter"
+        },
+        {
+          "name": "Driver Santosh",
+          "role": "Campus Shuttle Operator",
+          "goal": "Follow a balanced timetable without overcrowding during peak bell times",
+          "pain_point": "No live view of passenger crowds waiting at downstream stops",
+          "how_to_validate": "Ask a shuttle driver how they decide whether to skip a full stop"
+        }
+      ],
+      "features": [
+        {
+          "name": "Live Shuttle ETA Tracker",
+          "why": "Shows upcoming shuttle arrival times for all designated campus stops",
+          "effort": "S",
+          "impact": 5,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Stop Capacity and Crowd Indicator",
+          "why": "Allows waiting students to report stop crowd density with one tap",
+          "effort": "M",
+          "impact": 4,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Dynamic Route Optimizer",
+          "why": "Suggests short-turn routes during peak hours to relieve overcrowded stops",
+          "effort": "M",
+          "impact": 4,
+          "priority": "should",
+          "innovative": true
+        },
+        {
+          "name": "Service Disruption Broadcast",
+          "why": "Sends instant push alerts for roadwork or mechanical breakdowns",
+          "effort": "S",
+          "impact": 3,
+          "priority": "should",
+          "innovative": false
+        },
+        {
+          "name": "Carbon Savings Estimator",
+          "why": "Displays collective campus CO2 reduction from shared transit rides",
+          "effort": "L",
+          "impact": 2,
+          "priority": "could",
+          "innovative": false
+        }
+      ],
+      "key_questions": [
+        "How is shuttle location tracked without costly dedicated GPS hardware?",
+        "What triggers the dispatch of an overflow shuttle during peak class changeovers?",
+        "How do students receive alerts when away from mobile coverage areas?",
+        "What is the average passenger turnaround time per shuttle stop?"
+      ],
+      "approach_options": [
+        {
+          "name": "Driver Phone GPS Relay",
+          "how_it_works": "Driver's phone transmits location pings every 15 seconds to a central map.",
+          "tradeoff": "Extremely low cost to pilot, but depends on driver compliance and battery."
+        },
+        {
+          "name": "Crowdsourced Check-In Feed",
+          "how_it_works": "Riders tap 'on board' or 'bus passed stop' to infer route progress collaboratively.",
+          "tradeoff": "Requires no driver hardware, but unreliable during low-traffic off-peak hours."
+        },
+        {
+          "name": "Fixed Stop Beacon Logging",
+          "how_it_works": "Simple NFC or QR checkpoints at each bus shelter log arrival times.",
+          "tradeoff": "Highly reliable timestamp logs, but provides only discrete point-in-time updates."
+        }
+      ],
+      "success_criteria": [
+        "Keeps ETA prediction errors under 3 minutes for next-bus arrivals",
+        "Reduces peak-hour passenger wait times at major stops by 25 percent",
+        "Achieves 90 percent driver compliance with trip start and stop logging"
+      ],
+      "out_of_scope": [
+        "Citywide municipal bus integration and fare payment gateways",
+        "Autonomous self-driving vehicle systems or automated gate sensors"
+      ],
+      "innovation_prompts": [
+        "What if shuttles skipped empty stops dynamically based on student check-ins?",
+        "What if commuters received a walking-pace alert when the bus was 5 minutes away?",
+        "What if campus bikes and shuttles shared a unified arrival board at the main gate?"
+      ],
+      "example_input": "Track shuttle bus 4 on campus ring road morning schedule"
+    },
+    {
+      "id": "generic",
+      "label": "General Project",
+      "keywords": [],
+      "who_is_affected": [
+        "Primary end users facing daily friction",
+        "Team administrators coordinating workflow",
+        "Reviewers and evaluators checking quality"
+      ],
+      "why_it_matters": "Unclear manual workflows waste team time and lead to preventable operational errors.",
+      "stakeholders": [
+        {
+          "name": "Project Sponsor",
+          "interest": "Verify tangible working proof of concept",
+          "influence": "high"
+        },
+        {
+          "name": "Core End User",
+          "interest": "Solve daily operational pain point with minimal effort",
+          "influence": "high"
+        },
+        {
+          "name": "Technical Evaluator",
+          "interest": "Inspect system architecture, reliability and code sanity",
+          "influence": "medium"
+        }
+      ],
+      "personas": [
+        {
+          "name": "Alex",
+          "role": "Primary Operator",
+          "goal": "Complete the core workflow in three straightforward steps without technical confusion",
+          "pain_point": "Current process relies on messy disconnected spreadsheets and manual messages",
+          "how_to_validate": "Run a 5-minute walkthrough of the input form with a real target user"
+        },
+        {
+          "name": "Sam",
+          "role": "Team Coordinator",
+          "goal": "Monitor progress status and catch exceptions before they escalate",
+          "pain_point": "No single source of truth for ongoing tasks and deliverables",
+          "how_to_validate": "Show the status dashboard mockup to a team project manager"
+        }
+      ],
+      "features": [
+        {
+          "name": "Core Action Form",
+          "why": "Allows users to submit key information with immediate validation",
+          "effort": "S",
+          "impact": 5,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Status Overview Dashboard",
+          "why": "Displays live metrics and progress state for all logged items",
+          "effort": "M",
+          "impact": 4,
+          "priority": "must",
+          "innovative": false
+        },
+        {
+          "name": "Smart Rule Assistant",
+          "why": "Highlights exceptions and recommends next best actions automatically",
+          "effort": "M",
+          "impact": 4,
+          "priority": "should",
+          "innovative": true
+        },
+        {
+          "name": "Activity Audit Log",
+          "why": "Records timestamped status transitions for team accountability",
+          "effort": "S",
+          "impact": 3,
+          "priority": "should",
+          "innovative": false
+        },
+        {
+          "name": "Export and Sharing Tool",
+          "why": "Generates summary reports for external stakeholder presentations",
+          "effort": "L",
+          "impact": 2,
+          "priority": "could",
+          "innovative": false
+        }
+      ],
+      "key_questions": [
+        "What is the single most important user action that proves this works?",
+        "What input data is strictly necessary to produce the primary output?",
+        "How will users know when an operation has succeeded or failed?",
+        "What is the simplest edge case that could break this flow in a demo?"
+      ],
+      "approach_options": [
+        {
+          "name": "Direct Workflow Engine",
+          "how_it_works": "Guides the user through sequential input steps with instant validation feedback.",
+          "tradeoff": "Intuitive and quick to test, but less adaptable for non-linear user journeys."
+        },
+        {
+          "name": "Dashboard and Card Board",
+          "how_it_works": "Visualizes work items as interactive status cards updated in real time.",
+          "tradeoff": "Provides great bird's-eye visibility, but requires more frontend state management."
+        },
+        {
+          "name": "Automated Rule Dispatcher",
+          "how_it_works": "Applies deterministic rules to route each input directly to the appropriate outcome.",
+          "tradeoff": "Saves substantial manual review time, but edge cases require explicit rules."
+        }
+      ],
+      "success_criteria": [
+        "Executes the primary user action from start to finish in under 60 seconds",
+        "Validates all required input fields and prevents invalid submissions",
+        "Delivers 100 percent of MVP must-have capabilities within the demo window"
+      ],
+      "out_of_scope": [
+        "Enterprise single sign-on and complex multi-tenant role hierarchies",
+        "High-frequency streaming telemetry and distributed multi-region sync"
+      ],
+      "innovation_prompts": [
+        "What if the user could complete the entire flow using only keyboard shortcuts?",
+        "What if the system surfaced the single most critical task automatically on login?",
+        "What if common errors were prevented before submission through inline heuristics?"
+      ],
+      "example_input": "Submit test item into workflow and verify immediate status update"
+    }
+  ]
+}

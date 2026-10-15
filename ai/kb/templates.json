@@ -1,0 +1,365 @@
+{
+  "workflow_phases": [
+    {
+      "phase": "understand",
+      "title": "Deconstruct Problem & Surface Assumptions",
+      "weight": 10,
+      "activities": [
+        "Read the problem statement aloud and clarify ambiguities",
+        "Map key stakeholders and who hurts most from the problem",
+        "Document baseline assumptions and scope boundaries"
+      ],
+      "outcome": "Clear one-sentence problem statement and agreed assumption log"
+    },
+    {
+      "phase": "users",
+      "title": "Profile Personas & Quick Validation",
+      "weight": 10,
+      "activities": [
+        "Select one primary persona to anchor the live demo",
+        "Draft 5 test inputs including at least 1 edge case",
+        "Define concrete acceptance criteria for core user interactions"
+      ],
+      "outcome": "Target persona locked with 5 realistic demo test inputs"
+    },
+    {
+      "phase": "ideate",
+      "title": "Compare Approaches & Select Must-Haves",
+      "weight": 10,
+      "activities": [
+        "Weigh 2 to 3 architectural approaches and their trade-offs",
+        "Select exactly 3 must-have features for the MVP",
+        "Map the 5-step end-to-end demo path"
+      ],
+      "outcome": "MVP scope locked to 3 must-haves with trade-offs understood"
+    },
+    {
+      "phase": "build",
+      "title": "Implement MVP Core & Connect Demo Flow",
+      "weight": 45,
+      "activities": [
+        "Build data storage and API endpoints for must-haves",
+        "Implement core business logic or AI brain components",
+        "Build screens and connect end-to-end demo flow"
+      ],
+      "outcome": "Working end-to-end flow executing the demo path without crashing"
+    },
+    {
+      "phase": "validate",
+      "title": "Test Inputs, Bugfix & Check Limits",
+      "weight": 15,
+      "activities": [
+        "Run the 5 test inputs through the full application",
+        "Fix blocking crashes and polish user feedback messages",
+        "Catalog honest system limits and edge case boundaries"
+      ],
+      "outcome": "Verified test input results and documented honest limits"
+    },
+    {
+      "phase": "pitch",
+      "title": "Structure Jury Deck & Rehearse Pitch",
+      "weight": 10,
+      "activities": [
+        "Complete the 6-slide jury outline with proof points",
+        "Rehearse live 3-minute demo twice end-to-end",
+        "Prepare concise answers for likely jury technical questions"
+      ],
+      "outcome": "Rehearsed 3-minute pitch and polished live demo readiness"
+    }
+  ],
+  "task_templates": [
+    {
+      "id": "t1",
+      "phase": "understand",
+      "title": "Read the problem aloud and write the one-sentence problem",
+      "owner_role": "Integrator",
+      "weight": 5
+    },
+    {
+      "id": "t2",
+      "phase": "users",
+      "title": "Pick one persona and ask 2 real people how they handle this today",
+      "owner_role": "Integrator",
+      "weight": 8
+    },
+    {
+      "id": "t3",
+      "phase": "users",
+      "title": "Write 5 test inputs including 1 edge case",
+      "owner_role": "Integrator",
+      "weight": 6
+    },
+    {
+      "id": "t4",
+      "phase": "ideate",
+      "title": "Choose 2 to 3 must-have features from the brief",
+      "owner_role": "Integrator",
+      "weight": 6
+    },
+    {
+      "id": "t5",
+      "phase": "build",
+      "title": "Build the data storage and API for the must-haves",
+      "owner_role": "Backend",
+      "weight": 17
+    },
+    {
+      "id": "t6",
+      "phase": "build",
+      "title": "Build the core logic or AI for the must-haves",
+      "owner_role": "AI",
+      "weight": 17
+    },
+    {
+      "id": "t7",
+      "phase": "build",
+      "title": "Build the screens for the demo path",
+      "owner_role": "Frontend",
+      "weight": 17
+    },
+    {
+      "id": "t8",
+      "phase": "build",
+      "title": "Connect all parts and run one full path",
+      "owner_role": "Integrator",
+      "weight": 8
+    },
+    {
+      "id": "t9",
+      "phase": "validate",
+      "title": "Run the test inputs and fix critical issues only",
+      "owner_role": "Integrator",
+      "weight": 10
+    },
+    {
+      "id": "t10",
+      "phase": "pitch",
+      "title": "Write the 6-slide outline and rehearse the demo twice",
+      "owner_role": "Integrator",
+      "weight": 6
+    }
+  ],
+  "checkpoints": [
+    {
+      "check": "Problem and persona validated with one-sentence clarity",
+      "how": "Confirm the team agrees on the one persona and their single biggest daily friction point."
+    },
+    {
+      "check": "Architecture and MVP must-haves locked",
+      "how": "Verify that all 3 must-haves are assigned to owners and nice-to-haves are postponed."
+    },
+    {
+      "check": "First end-to-end integration pass runs",
+      "how": "Execute one round-trip from frontend UI input to backend response without crashing."
+    },
+    {
+      "check": "Live demo rehearsed twice with known limits ready",
+      "how": "Time a 3-minute run-through following the demo script and confirm honest limits slide."
+    }
+  ],
+  "jury_slides": [
+    {
+      "slide": 1,
+      "title": "Problem",
+      "proof": "Quote real user friction and contrast with today's manual workarounds."
+    },
+    {
+      "slide": 2,
+      "title": "Who it hurts",
+      "proof": "Persona profile with validated quotes and daily impact metrics."
+    },
+    {
+      "slide": 3,
+      "title": "Our approach",
+      "proof": "Architecture diagram showing why this approach balances speed and reliability."
+    },
+    {
+      "slide": 4,
+      "title": "Live demo",
+      "proof": "Unbroken 90-second live walkthrough of the core must-have path."
+    },
+    {
+      "slide": 5,
+      "title": "Does it work",
+      "proof": "Execution logs of test inputs and acceptance criteria pass rate."
+    },
+    {
+      "slide": 6,
+      "title": "Limits and next steps",
+      "proof": "Transparent list of current assumptions, edge case limits, and roadmap."
+    }
+  ],
+  "demo_tips": [
+    "Open all required browser tabs, terminal windows, and test inputs before the judges arrive.",
+    "Show the live working product first within 60 seconds; do not spend half your time on background slides.",
+    "Use realistic pre-prepared demo inputs rather than typing slowly or testing random inputs live.",
+    "If an error occurs, state calmly what was expected, explain the limit honestly, and continue the flow."
+  ],
+  "judge_question_bank": {
+    "Problem clarity": [
+      {
+        "question": "Who is your primary user and how exactly did you validate this pain point?",
+        "why_asked": "Jury wants to ensure you built for real human needs rather than an abstract idea.",
+        "answer_hint": "Name your specific persona, cite your interview or survey findings, and quantify how often this pain occurs."
+      },
+      {
+        "question": "Why can't users solve this with existing tools like WhatsApp or Excel today?",
+        "why_asked": "Tests whether you understand current alternatives and genuine workflow bottlenecks.",
+        "answer_hint": "Highlight what makes manual tools fail at scale, such as lack of automation, data loss, or delay."
+      },
+      {
+        "question": "What single metric defines success for this project in production?",
+        "why_asked": "Measures whether your solution outcome is measurable and tangible.",
+        "answer_hint": "Give a specific number, such as 30% reduction in turnaround time or 90% completion rate."
+      }
+    ],
+    "Works end to end": [
+      {
+        "question": "Can we see the end-to-end flow run from raw input to final output live?",
+        "why_asked": "Distinguishes working prototypes from mocked UI screenshots.",
+        "answer_hint": "Walk through your demo path in order: input submission, backend processing, and final visible result."
+      },
+      {
+        "question": "Which components in this flow are fully dynamic and which are simulated?",
+        "why_asked": "Evaluates honesty about the boundary between prototype and production.",
+        "answer_hint": "Be direct: state which APIs and data stores are live, and acknowledge any static mock data."
+      },
+      {
+        "question": "What happens if a user submits invalid or empty data at step one?",
+        "why_asked": "Tests basic defensive programming and error handling sanity.",
+        "answer_hint": "Show your form validation message and confirm the system fails safely with a readable error."
+      }
+    ],
+    "Scope realism": [
+      {
+        "question": "Why did you prioritize these specific must-have features over the rest?",
+        "why_asked": "Checks trade-off judgment and ability to scope ruthlessly under time constraints.",
+        "answer_hint": "Explain how these core features deliver the minimum believable value for your target persona."
+      },
+      {
+        "question": "What features did you intentionally cut to ensure a stable demo?",
+        "why_asked": "Rewords scope discipline as a strength rather than a failure.",
+        "answer_hint": "List your postponed nice-to-haves and show how cutting them kept your demo path robust."
+      },
+      {
+        "question": "How realistic is completing the remaining backlog given your team size and timeline?",
+        "why_asked": "Assesses project management awareness and execution velocity.",
+        "answer_hint": "Reference your effort budget points and explain your next scheduled development sprint."
+      }
+    ],
+    "Innovation and practicality": [
+      {
+        "question": "What is genuinely innovative about your approach compared to standard solutions?",
+        "why_asked": "Probes for creative problem-solving beyond standard CRUD tutorials.",
+        "answer_hint": "Point to your specific rule automation, lightweight architecture, or novel user touchpoint."
+      },
+      {
+        "question": "How does this solution handle practical constraints like offline access or low budget?",
+        "why_asked": "Tests real-world engineering viability and operational cost awareness.",
+        "answer_hint": "Discuss your zero-cost stack choices, low compute overhead, or offline-friendly design."
+      },
+      {
+        "question": "What is the biggest operational risk if this were deployed tomorrow?",
+        "why_asked": "Checks whether you recognize real deployment hurdles like user compliance or data quality.",
+        "answer_hint": "Highlight a real adoption barrier and your proposed mitigation plan."
+      }
+    ],
+    "Can you explain it": [
+      {
+        "question": "Can you explain your system architecture and data flow in 60 seconds?",
+        "why_asked": "Verifies technical mastery and clear communication under pressure.",
+        "answer_hint": "Describe frontend input, API request handling, business logic execution, and database state cleanly."
+      },
+      {
+        "question": "What was the most challenging technical bug your team solved during the build?",
+        "why_asked": "Proves that the team actually wrote and debugged the code.",
+        "answer_hint": "Describe the specific bug, how you diagnosed it, and the fix you implemented."
+      },
+      {
+        "question": "What are the clear boundaries and known limits of this prototype today?",
+        "why_asked": "Evaluates intellectual honesty, which judges respect far more than overpromising.",
+        "answer_hint": "State 2 clear current limitations candidly and explain what research or work would solve them."
+      }
+    ]
+  },
+  "improvement_templates": {
+    "Problem clarity": {
+      "summary_short": {
+        "action": "Expand idea summary to at least 20 words describing the core problem and who suffers.",
+        "minutes": 10
+      },
+      "missing_persona": {
+        "action": "Name your specific persona and key stakeholder explicitly in the project summary.",
+        "minutes": 5
+      },
+      "missing_metric": {
+        "action": "Add a concrete number or percentage goal to your summary (e.g. reduce wait by 30%).",
+        "minutes": 5
+      },
+      "missing_validation": {
+        "action": "Add a sentence explaining how you spoke to or interviewed real users about this issue.",
+        "minutes": 10
+      }
+    },
+    "Works end to end": {
+      "missing_must_haves": {
+        "action": "Connect at least one additional must-have feature into your live running flow.",
+        "minutes": 15
+      },
+      "missing_demo_script": {
+        "action": "Write out a step-by-step 4-line demo script showing exactly what to click and enter.",
+        "minutes": 10
+      }
+    },
+    "Scope realism": {
+      "no_features": {
+        "action": "List the core features built so the jury can assess your working scope.",
+        "minutes": 10
+      },
+      "overscoped": {
+        "action": "Trim non-essential feature promises and focus exclusively on your 3 must-haves.",
+        "minutes": 15
+      },
+      "time_crunch": {
+        "action": "With under 15 minutes left, freeze new code and polish only the working path.",
+        "minutes": 10
+      }
+    },
+    "Innovation and practicality": {
+      "missing_innovative": {
+        "action": "Highlight your innovative feature and explain the specific advantage it provides.",
+        "minutes": 10
+      },
+      "missing_constraints": {
+        "action": "Explain in your summary how your solution respects cost, time, or privacy constraints.",
+        "minutes": 10
+      },
+      "missing_limits": {
+        "action": "List at least two honest technical limits to demonstrate mature engineering judgment.",
+        "minutes": 5
+      },
+      "missing_baseline": {
+        "action": "Contrast your tool against what users do today (e.g. manual spreadsheets or paper).",
+        "minutes": 5
+      }
+    },
+    "Can you explain it": {
+      "empty_demo_script": {
+        "action": "Document your live demo walk-through steps so any team member can present it.",
+        "minutes": 10
+      },
+      "short_demo_script": {
+        "action": "Expand your demo script into 4 clear steps: input, processing, output, and result.",
+        "minutes": 10
+      },
+      "missing_limits": {
+        "action": "Identify at least one clear operational boundary to show honest self-awareness.",
+        "minutes": 5
+      },
+      "summary_length": {
+        "action": "Refine the idea summary to be between 20 and 120 words for quick jury reading.",
+        "minutes": 5
+      }
+    }
+  }
+}

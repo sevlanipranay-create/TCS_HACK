@@ -1,0 +1,43 @@
+{
+  "tech_layers": [
+    {
+      "layer": "Frontend",
+      "options": ["Streamlit", "React + Vite", "Vanilla HTML/JS"],
+      "recommended": "Streamlit",
+      "why": "Rapid interactive UI with minimal boilerplate for fast hackathon demo delivery.",
+      "tradeoff": "Less design customization compared to a custom React single-page app."
+    },
+    {
+      "layer": "Backend",
+      "options": ["FastAPI", "Flask", "Node.js Express"],
+      "recommended": "FastAPI",
+      "why": "High performance, automatic interactive API documentation, and native Pydantic schema validation.",
+      "tradeoff": "Requires Python async awareness for complex concurrent endpoints."
+    },
+    {
+      "layer": "Data",
+      "options": ["SQLite", "JSON File Storage", "In-Memory Dict Cache"],
+      "recommended": "SQLite",
+      "why": "Zero-configuration relational storage with full SQL support and single-file portability.",
+      "tradeoff": "Not suitable for high-concurrency distributed production workloads."
+    },
+    {
+      "layer": "AI/logic",
+      "options": [
+        "Deterministic Rules Engine",
+        "Gemini API Client (verify package and API names before use)",
+        "Scikit-Learn Classifier"
+      ],
+      "recommended": "Deterministic Rules Engine",
+      "why": "100% reliable, zero network latency, no API key required, and fully predictable for live jury demos.",
+      "tradeoff": "Requires explicit rule definition rather than open-ended natural language generation."
+    },
+    {
+      "layer": "Demo/hosting",
+      "options": ["Localhost Multi-Terminal", "Docker Compose", "Render / Vercel Free Tier"],
+      "recommended": "Localhost Multi-Terminal",
+      "why": "Eliminates network unpredictability and third-party cloud deployment failure risks during jury presentation.",
+      "tradeoff": "Accessible only on the presenter's local machine during the evaluation."
+    }
+  ]
+}
