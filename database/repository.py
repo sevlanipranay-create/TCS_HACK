@@ -41,6 +41,17 @@ def init() -> None:
     with open(schema_path, "r", encoding="utf-8") as f:
         schema_sql = f.read()
     with _conn() as conn:
+        cur = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='sessions'")
+        if cur.fetchone():
+            cols = [col[1] for col in conn.execute("PRAGMA table_info(sessions)").fetchall()]
+            if "team_json" not in cols:
+                conn.execute("ALTER TABLE sessions ADD COLUMN team_json TEXT")
+                if "team" in cols:
+                    conn.execute("UPDATE sessions SET team_json = team WHERE team_json IS NULL")
+            if "brief_json" not in cols:
+                conn.execute("ALTER TABLE sessions ADD COLUMN brief_json TEXT")
+                if "brief" in cols:
+                    conn.execute("UPDATE sessions SET brief_json = brief WHERE brief_json IS NULL")
         conn.executescript(schema_sql)
 
 

@@ -1,6 +1,9 @@
 import os
+from pathlib import Path
 import sys
 import tempfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 # Ensure temporary DB is set before importing app modules
 temp_db = tempfile.mktemp(suffix=".db")
@@ -14,6 +17,7 @@ import backend.samples as samples
 
 
 def run_checks():
+    deps.get_repo().init()
     client = TestClient(app)
     passed = 0
     total = 10

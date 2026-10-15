@@ -46,6 +46,21 @@ def _calc_checkpoints(total_min: int) -> List[int]:
     return [cp1, cp2, cp3, cp4]
 
 
+def _classify_domain(statement: str) -> str:
+    s = statement.lower()
+    if any(k in s for k in ("food", "canteen", "dining", "meal", "kitchen")):
+        return "Food Sustainability & Campus Operations"
+    if any(k in s for k in ("study", "peer", "learn", "course", "exam", "mathematics", "subject")):
+        return "Academic Collaboration & Peer Learning"
+    if any(k in s for k in ("lost", "found", "item", "badge")):
+        return "Campus Lost & Found & Student Services"
+    if any(k in s for k in ("metaverse", "blockchain", "drone", "cctv", "biometric")):
+        return "Campus Virtual Infrastructure & Smart Super-Apps"
+    if any(k in s for k in ("deadline", "assignment", "event", "task", "tracker")):
+        return "Student Productivity & Task Management"
+    return "Campus Operations & Student Workflow"
+
+
 def generate_brief(problem_statement: str, team: dict) -> dict:
     """Generate a canned but fully valid Brief dict with session_id=None."""
     clean_statement = redact(problem_statement)
@@ -192,7 +207,7 @@ def generate_brief(problem_statement: str, team: dict) -> dict:
         "source": "stub",
         "problem": {
             "summary": "Campus dining halls face massive food wastage daily due to unpredictable student turnout. A smart demand-forecasting and surplus-redistribution system can optimize prep volumes, minimize kitchen waste, and route leftover food to hungry students safely before expiry.",
-            "domain": "Food Sustainability & Campus Operations",
+            "domain": _classify_domain(clean_statement),
             "who_is_affected": [
                 "Hostel and day-scholar students seeking affordable meals",
                 "Kitchen managers and cooks balancing cooking quotas",
@@ -403,8 +418,8 @@ def generate_brief(problem_statement: str, team: dict) -> dict:
 def mentor_reply(brief: dict, history: list, message: str, stage: str, team: dict) -> dict:
     """Provide coaching reply with guardrail against writing complete code."""
     clean_msg = redact(message)
-    # Check guardrail: asks for full/complete code, solution, app, project, or "do it for us"
-    guardrail_pattern = r"(full|complete)\s+(code|solution|app|project)|do it for us"
+    # Check guardrail: asks for full/complete/entire code, solution, app, project, or "do it for us"
+    guardrail_pattern = r"(full|complete|entire).{0,40}(code|solution|app|project)|write.{0,30}code|do it for us|generate.{0,30}code"
     if re.search(guardrail_pattern, clean_msg, re.IGNORECASE):
         return {
             "reply": "I am your hackathon mentor and coach. My role is to help your team think through problem structure, evaluate architectural trade-offs, and prioritize scope. I do not write full code or implement entire projects for you. What specific architectural decision or blocker would you like to explore together?",
@@ -446,16 +461,90 @@ def mentor_reply(brief: dict, history: list, message: str, stage: str, team: dic
 
 def judge(brief: dict, submission: dict, team: dict) -> dict:
     """Evaluate submission against 5 fixed criteria and return JudgeReport dict."""
-    criteria_names = [
-        "Problem clarity",
-        "Works end to end",
-        "Scope realism",
-        "Innovation and practicality",
-        "Can you explain it",
-    ]
+    idea_summary = redact(submission.get("idea_summary", ""))
+    demo_script = redact(submission.get("demo_script", ""))
+    features_built = submission.get("features_built", [])
+    known_limits = submission.get("known_limits", [])
 
-    scores = [4, 4, 3, 4, 4]
-    overall = round(100 * sum(scores) / 25)
+    # Deterministic scoring based on rule checklist
+    # Criterion 1: Problem clarity
+    s_lower = idea_summary.lower()
+    has_interviewed = "interviewed" in s_lower
+    has_today = "today" in s_lower
+    has_number = any(c.isdigit() for c in idea_summary)
+    has_persona = any(p.get("name", "").lower() in s_lower for p in brief.get("personas", [])) or "student" in s_lower
+
+    if has_interviewed and has_today and has_number and has_persona and len(idea_summary.split()) >= 15:
+        c1 = 5
+        e1 = "Problem statement strongly backed by same-day customer discovery and user quotes."
+        i1 = "Link customer pain directly to product metrics."
+    elif len(idea_summary.split()) >= 5:
+        c1 = 2
+        e1 = "Problem summary is vague and lacks validation evidence."
+        i1 = "Interview 3 actual target users today to gather quantitative pain points."
+    else:
+        c1 = 1
+        e1 = "Problem summary missing or too short."
+        i1 = "Write a clear 25-word summary citing target persona pain."
+
+    # Criterion 2: Works end to end
+    must_have_count = len(brief.get("mvp", {}).get("must_have", []))
+    built_count = len(features_built)
+    has_script_steps = len(demo_script.splitlines()) >= 4
+
+    if built_count >= must_have_count and has_script_steps:
+        c2 = 4
+        e2 = "All core MVP must-haves built and supported by a multi-step scripted demo path."
+        i2 = "Test offline reconnect behavior during the demo flow."
+    elif built_count >= 1:
+        c2 = 2
+        e2 = f"Only {built_count} feature listed; demo script incomplete or missing."
+        i2 = "Script a 4-step happy path walkthrough covering order to fulfillment."
+    else:
+        c2 = 1
+        e2 = "No built features demonstrated."
+        i2 = "Implement at least the primary user interaction before presenting."
+
+    # Criterion 3: Scope realism
+    limits_count = len(known_limits)
+    if limits_count >= 2:
+        c3 = 4
+        e3 = "Team honestly identified architectural boundaries and out-of-scope items."
+        i3 = "Clarify fallback behaviors for known operational bottlenecks."
+    else:
+        c3 = 2
+        e3 = "Limits not documented; risk of overscoping or unexpected edge-case failure."
+        i3 = "Explicitly list 2 clear limitations you are not attempting in this hackathon."
+
+    # Criterion 4: Innovation and practicality
+    innovative_feature_names = [f.get("name", "").lower() for f in brief.get("features", []) if f.get("innovative")]
+    has_innovative = (
+        any(f.lower() in innovative_feature_names for f in features_built) or
+        any("offline" in f.lower() or "predictive" in f.lower() or "qr" in f.lower() or "surplus" in f.lower() for f in features_built) or
+        any("offline" in line.lower() or "predictive" in line.lower() or "qr" in line.lower() for line in demo_script.splitlines())
+    )
+    if has_innovative:
+        c4 = 4
+        e4 = "Practical innovation integrated directly into the core workflow."
+        i4 = "Quantify performance benefits of your innovative mechanism."
+    else:
+        c4 = 2
+        e4 = "Standard implementation without notable edge-case or efficiency innovation."
+        i4 = "Add a resilient fallback or lightweight queue intelligence feature."
+
+    # Criterion 5: Can you explain it
+    if len(idea_summary.split()) >= 15 and has_script_steps:
+        c5 = 4
+        e5 = "Clear articulation of user benefit and cohesive demonstration plan."
+        i5 = "Practice crisp 30-second opening hook."
+    else:
+        c5 = 2
+        e5 = "Explanation lacks punch or clear demonstration structure."
+        i5 = "Align presentation strictly to the 6-slide jury outline."
+
+    criteria_scores = [c1, c2, c3, c4, c5]
+    total_score = sum(criteria_scores)
+    overall = round(100 * total_score / 25)
 
     if overall >= 80:
         readiness = "ready"
@@ -465,78 +554,53 @@ def judge(brief: dict, submission: dict, team: dict) -> dict:
         readiness = "needs_work"
 
     criteria = [
-        {
-            "name": criteria_names[0],
-            "score": scores[0],
-            "evidence": "Clear problem statement and stakeholder mapping defined in the submission.",
-            "improve": "Quantify the daily cost and environmental impact of food waste in the opening slide.",
-        },
-        {
-            "name": criteria_names[1],
-            "score": scores[1],
-            "evidence": "Working end-to-end reservation flow shown from student booking to kitchen update.",
-            "improve": "Add clear visual feedback when a meal slot reaches capacity.",
-        },
-        {
-            "name": criteria_names[2],
-            "score": scores[2],
-            "evidence": "Three focused must-haves prioritized for the demo without extraneous features.",
-            "improve": "Clearly state that payment processing and external delivery are deferred post-hackathon.",
-        },
-        {
-            "name": criteria_names[3],
-            "score": scores[3],
-            "evidence": "Surplus redistribution broadcast addresses food waste practically with high feasibility.",
-            "improve": "Consider adding simple batch demand forecasting based on weekday schedules.",
-        },
-        {
-            "name": criteria_names[4],
-            "score": scores[4],
-            "evidence": "Team articulates trade-offs between mandatory booking and student adoption well.",
-            "improve": "Rehearse the live demo transitions so every team member speaks within the time limit.",
-        },
+        {"name": "Problem clarity", "score": c1, "evidence": e1, "improve": i1},
+        {"name": "Works end to end", "score": c2, "evidence": e2, "improve": i2},
+        {"name": "Scope realism", "score": c3, "evidence": e3, "improve": i3},
+        {"name": "Innovation and practicality", "score": c4, "evidence": e4, "improve": i4},
+        {"name": "Can you explain it", "score": c5, "evidence": e5, "improve": i5},
     ]
 
     likely_questions = [
         {
-            "question": "How will you handle students who pre-order but fail to show up?",
-            "why_asked": "Jury wants to see if you have planned for user behavior edge cases.",
-            "answer_hint": "Explain the release window policy: unclaimed meals are released for surplus broadcast 15 minutes before closing.",
+            "question": "How did you validate that students actually want this instead of WhatsApp?",
+            "why_asked": "Tests customer discovery rigor",
+            "answer_hint": "Cite user interview quotes and specific queue wait time numbers.",
         },
         {
-            "question": "Why did you choose SQLite over a distributed database for this solution?",
-            "why_asked": "Jury evaluates architectural pragmatism and hackathon constraints.",
-            "answer_hint": "Highlight SQLite's zero-config local reliability for hackathon validation, with clean migration path to PostgreSQL.",
+            "question": "What happens if campus Wi-Fi disconnects midway through an order?",
+            "why_asked": "Tests edge-case resilience",
+            "answer_hint": "Demonstrate local storage token queuing and automatic reconnect sync.",
         },
         {
-            "question": "How does the kitchen staff interact with the dashboard during busy prep hours?",
-            "why_asked": "Assesses operational feasibility and real-world kitchen environment.",
-            "answer_hint": "Mention high-contrast large-font UI designed for low-friction touch interaction in the kitchen.",
+            "question": "How will you onboard non-tech-savvy canteen workers without training?",
+            "why_asked": "Tests operational adoption feasibility",
+            "answer_hint": "Show the large single-tap status toggle on the coordinator screen.",
         },
         {
-            "question": "What happens if campus Wi-Fi drops during lunch hour?",
-            "why_asked": "Checks resilience to real-world infrastructure failures.",
-            "answer_hint": "Tokens can be cached locally or verified via offline token codes generated upon booking.",
+            "question": "Why did you choose your specific tech stack over alternatives?",
+            "why_asked": "Tests architectural trade-off awareness",
+            "answer_hint": "Explain how typed contracts and lightweight SQLite prevented integration bugs.",
         },
         {
-            "question": "How would you scale this platform to multiple campus cafeterias?",
-            "why_asked": "Probes long-term architecture and multi-tenant capabilities.",
-            "answer_hint": "Demonstrate the multi-venue schema design and centralized admin analytics aggregation.",
+            "question": "If you had 24 more hours, what is the single next feature you would ship?",
+            "why_asked": "Tests product roadmap vision",
+            "answer_hint": "Reference the out-of-scope priorities from your brief.",
         },
     ]
 
     top_improvements = [
         {
-            "action": "Add prominent visual confirmation message when meal slot reservation completes",
+            "action": "Interview 3 students today to tighten the problem statement hook",
             "minutes": 15,
         },
         {
-            "action": "Include explicit disclaimer in pitch slide regarding out-of-scope payment gateway",
+            "action": "Rehearse the 5-step live demo script with a stopwatch twice",
             "minutes": 10,
         },
         {
-            "action": "Rehearse demo timing to ensure presentation finishes in under 3 minutes",
-            "minutes": 15,
+            "action": "Document 2 known boundary limitations explicitly on your final slide",
+            "minutes": 5,
         },
     ]
 
@@ -549,3 +613,4 @@ def judge(brief: dict, submission: dict, team: dict) -> dict:
         "disclaimer": "Practice check against a transparent rubric. It does not predict real jury scores.",
         "source": "stub",
     }
+
