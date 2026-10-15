@@ -1,224 +1,154 @@
-# database/repository.py
+from contextlib import contextmanager
+from datetime import datetime, timezone
 import json
 import os
-import secrets
+from pathlib import Path
 import sqlite3
-from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
+import uuid
 
 
 def _get_db_path() -> str:
-    return os.getenv("MENTOR_DB", "mentor.db")
+    return os.environ.get("MENTOR_DB", "mentor.db")
 
 
-def _get_connection() -> sqlite3.Connection:
-    conn = sqlite3.connect(_get_db_path(), timeout=5.0)
-    conn.execute("PRAGMA journal_mode=WAL;")
-    conn.execute("PRAGMA busy_timeout=5000;")
-    conn.execute("PRAGMA foreign_keys=ON;")
-    return conn
+def _now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+@contextmanager
+def _conn():
+    db_path = _get_db_path()
+    if db_path != ":memory:":
+        parent = Path(db_path).parent
+        if str(parent) not in ("", "."):
+            parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path, timeout=5.0)
+    conn.row_factory = sqlite3.Row
+    try:
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.execute("PRAGMA busy_timeout=5000")
+        if db_path != ":memory:":
+            conn.execute("PRAGMA journal_mode=WAL")
+        with conn:
+            yield conn
+    finally:
+        conn.close()
 
 
 def init() -> None:
-    """Initialize SQLite database with required tables idempotently."""
-    conn = _get_connection()
-    try:
-        with conn:
-            conn.execute(
-                """
-                CREATE TABLE IF NOT EXISTS sessions (
-                    id TEXT PRIMARY KEY,
-                    created_at TEXT NOT NULL,
-                    problem TEXT NOT NULL,
-                    team TEXT NOT NULL,
-                    brief TEXT NOT NULL,
-                    last_judge TEXT
-                );
-                """
-            )
-            conn.execute(
-                """
-                CREATE TABLE IF NOT EXISTS messages (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    session_id TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
-                    role TEXT NOT NULL,
-                    content TEXT NOT NULL,
-                    stage TEXT NOT NULL,
-                    created_at TEXT NOT NULL
-                );
-                """
-            )
-            conn.execute(
-                """
-                CREATE TABLE IF NOT EXISTS task_states (
-                    session_id TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
-                    task_id TEXT NOT NULL,
-                    done INTEGER NOT NULL DEFAULT 0,
-                    PRIMARY KEY (session_id, task_id)
-                );
-                """
-            )
-    finally:
-        conn.close()
+    schema_path = Path(__file__).resolve().parent / "schema.sql"
+    with open(schema_path, "r", encoding="utf-8") as f:
+        schema_sql = f.read()
+    with _conn() as conn:
+        conn.executescript(schema_sql)
 
 
 def create_session(problem: str, team: dict, brief: dict) -> str:
-    """Create a new session, storing UTC ISO text with seconds precision, returning 12-hex-character ID."""
-    init()
-    session_id = secrets.token_hex(6)  # exactly 12 hex characters
-    created_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    conn = _get_connection()
-    try:
-        with conn:
-            conn.execute(
-                """
-                INSERT INTO sessions (id, created_at, problem, team, brief, last_judge)
-                VALUES (?, ?, ?, ?, ?, NULL);
-                """,
-                (session_id, created_at, problem, json.dumps(team), json.dumps(brief)),
-            )
-        return session_id
-    finally:
-        conn.close()
+    session_id = uuid.uuid4().hex[:12]
+    now_str = _now()
+    team_json = json.dumps(team)
+    brief_json = json.dumps(brief)
+    with _conn() as conn:
+        conn.execute(
+            "INSERT INTO sessions (id, created_at, problem, team_json, brief_json) VALUES (?, ?, ?, ?, ?)",
+            (session_id, now_str, problem, team_json, brief_json),
+        )
+    return session_id
 
 
 def get_session(session_id: str) -> Optional[dict]:
-    """Retrieve session dictionary or None if not found."""
-    init()
-    conn = _get_connection()
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT id, created_at, problem, team, brief, last_judge
-            FROM sessions
-            WHERE id = ?;
-            """,
+    with _conn() as conn:
+        cursor = conn.execute(
+            "SELECT id, created_at, problem, team_json, brief_json FROM sessions WHERE id = ?",
             (session_id,),
         )
         row = cursor.fetchone()
         if not row:
             return None
+
+        judge_cursor = conn.execute(
+            "SELECT report_json FROM judge_reports WHERE session_id = ? ORDER BY id DESC LIMIT 1",
+            (session_id,),
+        )
+        judge_row = judge_cursor.fetchone()
+        last_judge = json.loads(judge_row["report_json"]) if judge_row else None
+
         return {
-            "id": row[0],
-            "created_at": row[1],
-            "problem": row[2],
-            "team": json.loads(row[3]),
-            "brief": json.loads(row[4]),
-            "last_judge": json.loads(row[5]) if row[5] else None,
+            "id": row["id"],
+            "created_at": row["created_at"],
+            "problem": row["problem"],
+            "team": json.loads(row["team_json"]),
+            "brief": json.loads(row["brief_json"]),
+            "last_judge": last_judge,
         }
-    finally:
-        conn.close()
 
 
 def add_message(session_id: str, role: str, content: str, stage: str) -> None:
-    """Add a message to the session's chat history. Raises KeyError if session does not exist."""
-    init()
-    conn = _get_connection()
-    try:
-        with conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT 1 FROM sessions WHERE id = ?;", (session_id,))
-            if not cursor.fetchone():
-                raise KeyError(f"Session '{session_id}' does not exist.")
-            created_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-            cursor.execute(
-                """
-                INSERT INTO messages (session_id, role, content, stage, created_at)
-                VALUES (?, ?, ?, ?, ?);
-                """,
-                (session_id, role, content, stage, created_at),
-            )
-    finally:
-        conn.close()
+    now_str = _now()
+    with _conn() as conn:
+        cur = conn.execute("SELECT 1 FROM sessions WHERE id = ?", (session_id,))
+        if not cur.fetchone():
+            raise KeyError(f"unknown session: {session_id}")
+        conn.execute(
+            "INSERT INTO messages (session_id, role, content, stage, created_at) VALUES (?, ?, ?, ?, ?)",
+            (session_id, role, content, stage, now_str),
+        )
 
 
 def list_messages(session_id: str) -> list:
-    """List messages for a session in chronological order (oldest first)."""
-    init()
-    conn = _get_connection()
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT role, content, stage, created_at
-            FROM messages
-            WHERE session_id = ?
-            ORDER BY id ASC;
-            """,
+    with _conn() as conn:
+        cursor = conn.execute(
+            "SELECT role, content, stage, created_at FROM messages WHERE session_id = ? ORDER BY id ASC",
             (session_id,),
         )
         return [
             {
-                "role": row[0],
-                "content": row[1],
-                "stage": row[2],
-                "created_at": row[3],
+                "role": row["role"],
+                "content": row["content"],
+                "stage": row["stage"],
+                "created_at": row["created_at"],
             }
             for row in cursor.fetchall()
         ]
-    finally:
-        conn.close()
 
 
 def set_task_done(session_id: str, task_id: str, done: bool) -> None:
-    """Upsert task completion state. Raises KeyError if session does not exist."""
-    init()
-    conn = _get_connection()
-    try:
-        with conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT 1 FROM sessions WHERE id = ?;", (session_id,))
-            if not cursor.fetchone():
-                raise KeyError(f"Session '{session_id}' does not exist.")
-            cursor.execute(
-                """
-                INSERT INTO task_states (session_id, task_id, done)
-                VALUES (?, ?, ?)
-                ON CONFLICT(session_id, task_id) DO UPDATE SET done = excluded.done;
-                """,
-                (session_id, task_id, 1 if done else 0),
-            )
-    finally:
-        conn.close()
+    now_str = _now()
+    done_val = 1 if done else 0
+    with _conn() as conn:
+        cur = conn.execute("SELECT 1 FROM sessions WHERE id = ?", (session_id,))
+        if not cur.fetchone():
+            raise KeyError(f"unknown session: {session_id}")
+        conn.execute(
+            """
+            INSERT INTO tasks (session_id, task_id, done, updated_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(session_id, task_id) DO UPDATE SET
+                done = excluded.done,
+                updated_at = excluded.updated_at
+            """,
+            (session_id, task_id, done_val, now_str),
+        )
 
 
 def get_task_states(session_id: str) -> dict:
-    """Return dictionary of task states: {task_id: bool}."""
-    init()
-    conn = _get_connection()
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT task_id, done
-            FROM task_states
-            WHERE session_id = ?;
-            """,
+    with _conn() as conn:
+        cursor = conn.execute(
+            "SELECT task_id, done FROM tasks WHERE session_id = ?",
             (session_id,),
         )
-        return {row[0]: bool(row[1]) for row in cursor.fetchall()}
-    finally:
-        conn.close()
+        return {row["task_id"]: bool(row["done"]) for row in cursor.fetchall()}
 
 
 def save_judge(session_id: str, report: dict) -> None:
-    """Save judge report to session. Raises KeyError if session does not exist."""
-    init()
-    conn = _get_connection()
-    try:
-        with conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT 1 FROM sessions WHERE id = ?;", (session_id,))
-            if not cursor.fetchone():
-                raise KeyError(f"Session '{session_id}' does not exist.")
-            cursor.execute(
-                """
-                UPDATE sessions
-                SET last_judge = ?
-                WHERE id = ?;
-                """,
-                (json.dumps(report), session_id),
-            )
-    finally:
-        conn.close()
+    now_str = _now()
+    report_json = json.dumps(report)
+    with _conn() as conn:
+        cur = conn.execute("SELECT 1 FROM sessions WHERE id = ?", (session_id,))
+        if not cur.fetchone():
+            raise KeyError(f"unknown session: {session_id}")
+        conn.execute(
+            "INSERT INTO judge_reports (session_id, report_json, created_at) VALUES (?, ?, ?)",
+            (session_id, report_json, now_str),
+        )
